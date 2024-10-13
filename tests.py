@@ -3,7 +3,6 @@ from datetime import date
 from clickhttp import UserConn, ClickHttpSession, FrameType
 from clickhttp.check_conn import is_namedtuple
 from clickhttp.log import to_log
-from clickhttp.connection import UserConn
 from clickhttp.sql_formatter import formatter
 
 
