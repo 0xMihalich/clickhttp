@@ -1,4 +1,4 @@
-from typing import Any, Dict, NamedTuple, Optional, Union
+from typing import Any, Dict, Optional, Union
 from uuid import uuid4
 
 from requests import Session
@@ -32,7 +32,7 @@ class ClickHttpSession:
 
         if isinstance(connection, str):
             connection: UserConn = get_conn(connection)
-        elif not isinstance(connection, NamedTuple):
+        elif not isinstance(connection, tuple):
             raise FrameError("Unknown connection type")
         
         if not isinstance(frame_type, FrameType):
