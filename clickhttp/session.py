@@ -4,6 +4,7 @@ from uuid import uuid4
 from requests import Session
 
 from .connection import get_conn, UserConn
+from .check_conn import is_namedtuple
 from .create_temp import temp_query
 from .errors import ClosedError, FrameError
 from .frame import DTYPE, FrameType, Frame, _FrameType
@@ -32,22 +33,23 @@ class ClickHttpSession:
 
         if isinstance(connection, str):
             connection: UserConn = get_conn(connection)
-        elif not isinstance(connection, tuple):
+        elif not is_namedtuple(connection):
             raise FrameError("Unknown connection type")
-        
+
         if not isinstance(frame_type, FrameType):
             raise FrameError("Unknown frame type")
-        
+
         self.chunk_size: int = chunk_size
         self.is_compressed: bool = is_compressed
         self.proxy: Optional[str] = proxy
         self.timeout: Optional[int] = timeout
 
         mode: str = GZIP_STR if self.is_compressed else ""
-        
-        self.url: str = (f"""http://{connection.host}:{connection.port
-                                                       if connection.port != 9000
-                                                       else 8123}""" + mode)
+        protocol: str = "https" if connection.port == 443 else "http"
+
+        self.url: str = (f"""{protocol}://{connection.host}:{connection.port
+                                                             if connection.port != 9000
+                                                             else 8123}""" + mode)
         self.session_id: str = str(uuid4())
         self.database: str = connection.database
         self.frame_type: _FrameType = frame_type
@@ -74,7 +76,7 @@ class ClickHttpSession:
         status:     str = "Closed"     if self.is_closed     else "Open"
         session_id: str = "Undefined"  if self.is_closed     else self.session_id
         mode:       str = "Compressed" if self.is_compressed else "Normal"
-        
+
         return ("ClickHttpSession object."
                 f"\nStatus:      {status}"
                 f"\nSession ID:  {session_id}"
@@ -90,7 +92,7 @@ class ClickHttpSession:
 
         if self.is_closed:
             self.reopen()
-        
+
         return self
 
     def __exit__(self: "ClickHttpSession", *_: Any) -> None:
@@ -103,7 +105,7 @@ class ClickHttpSession:
         """Тип возвращаемого DataFrame."""
 
         return self.frame_type.name
-    
+
     @property
     def change_mode(self: "ClickHttpSession") -> None:
         """Изменить режим работы сервера (сжатие/без сжатия)."""
@@ -118,7 +120,7 @@ class ClickHttpSession:
             self.is_compressed: bool = True
             self.headers["Accept-Encoding"] = "gzip"
             to_log("Clickhouse Multi-Query session mode changed to Compressed.")
-        
+
         self.sess.headers.clear()
         self.sess.headers.update(self.headers)
 
@@ -165,9 +167,9 @@ class ClickHttpSession:
             self.sess.proxies.update(proxies)
             if logging:
                 to_log(f"ClickHttpSession change proxy settings with proxy '{proxy}'.")
-        
+
         self.sess.trust_env=False
-    
+
     def execute(self: "ClickHttpSession",
                 query: str,) -> None:
         """Выполнить запрос к базе без возвращения результата."""
@@ -229,7 +231,7 @@ class ClickHttpSession:
 
         if self.is_closed:
             raise ClosedError()
-        
+
         return insert_table(sess=self.sess,
                             session_id=self.session_id,
                             url=self.url,

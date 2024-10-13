@@ -24,7 +24,8 @@ def clickhouse_multiquery(multiquery: str, connection: str,) -> None:
 
     conn: UserConn = get_conn(connection)
     
-    url: str = f"http://{conn.host}:{conn.port if conn.port != 9000 else 8123}"
+    protocol: str = "https" if conn.port == 443 else "http"
+    url: str = f"{protocol}://{conn.host}:{conn.port if conn.port != 9000 else 8123}"
     session_id: str = str(uuid4())
     headers: Dict[str, str,] = {
         "X-ClickHouse-User": conn.user,

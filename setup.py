@@ -19,12 +19,13 @@ with open(file="README.md", mode="r", encoding="utf-8",) as f:
     long_description = f.read()
 
 setup(name="clickhttp",
-      version="0.0.9",
+      version="0.1.0",
       packages=find_packages(),
       install_requires=install_requires,
       author="0xMihalich",
       author_email="bayanmobile87@gmail.com",
       description="Работа с БД Clickhouse по HTTP-протоколу",
+      url="https://github.com/0xMihalich/clickhttp",
       long_description=long_description,
       long_description_content_type="text/markdown",
       zip_safe=False,)
