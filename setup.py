@@ -19,7 +19,7 @@ with open(file="README.md", mode="r", encoding="utf-8",) as f:
     long_description = f.read()
 
 setup(name="clickhttp",
-      version="0.0.8",
+      version="0.0.9",
       packages=find_packages(),
       install_requires=install_requires,
       author="0xMihalich",
