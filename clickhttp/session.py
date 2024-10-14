@@ -225,7 +225,7 @@ class ClickHttpSession:
 
     def insert_table(self: "ClickHttpSession",
                      table: str,
-                     data_frame: DTYPE,
+                     data_frame: DTYPE,  # type: ignore
                      use_columns: bool = True,) -> None:
         """Запись данных из DataFrame в целевую таблицу."""
 

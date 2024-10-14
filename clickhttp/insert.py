@@ -49,7 +49,7 @@ def make_chunk(string: str,
     return string.encode("utf-8")
 
 
-def generate_chunks(data_frame: DTYPE,
+def generate_chunks(data_frame: DTYPE,  # type: ignore
                     frame_type: str,
                     is_compressed: bool = True,
                     chunk_size: int = CHUNK_SIZE,) -> Generator[bytes, None, None,]:
@@ -92,7 +92,7 @@ def insert_table(sess: Session,  # noqa: C901
                  url: str,
                  database: str,
                  table: str,
-                 data_frame: DTYPE,
+                 data_frame: DTYPE,  # type: ignore
                  is_compressed: bool = True,
                  chunk_size: int = CHUNK_SIZE,
                  timeout: int = 10,

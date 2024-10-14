@@ -36,12 +36,12 @@ def read_frame(sess: Session,  # noqa: C901
     elif not text:
         return Frame([], [], None, 0.0, 0,)
 
-    json: JsonType = loads(resp.content)
+    json: JsonType = loads(resp.content)  # type: ignore
     stats: Dict[str, Union[int, float,]] = json["statistics"]
 
     columns: List[str] = [col["name"] for col in json["meta"]]
     types: List[str] = [col["type"] for col in json["meta"]]
-    data: JsonType = json["data"]
+    data: JsonType = json["data"]  # type: ignore
     time_read: float = stats["elapsed"]
     bytes_read: int = stats["bytes_read"]
 
@@ -74,7 +74,7 @@ def read_frame(sess: Session,  # noqa: C901
     elif frame_type.name == "polars":
         frame = frame_type.value(data=data, schema=columns, orient="row")
     elif frame_type.name == "python":
-        frame: JsonType = data
+        frame: JsonType = data  # type: ignore
     elif frame_type.name == "vaex":
         try:
             from vaex import from_records

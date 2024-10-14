@@ -1,6 +1,6 @@
 from enum import Enum
 from logging import warning
-from typing import List, NamedTuple, TypeAlias, Union
+from typing import List, NamedTuple, NewType, Union
 
 from .json_type import JsonType
 
@@ -52,7 +52,7 @@ except ImportError:
     warning("vaex not installed. Use: pip install vaex")
 
 
-DTYPE: TypeAlias = Union[tuple(_dtypes)]  # type: ignore
+DTYPE = NewType("DTYPE", Union[tuple(_dtypes)])
 
 
 class _FrameType(Enum):
@@ -82,6 +82,6 @@ class Frame(NamedTuple):
 
     columns: List[str]
     types: List[str]
-    data: DTYPE
+    data: DTYPE  # type: ignore
     time_read: float
     bytes_read: int
