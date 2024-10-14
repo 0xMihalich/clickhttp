@@ -18,7 +18,7 @@ CHUNK_SIZE: int = 52_428_800
 def to_str(col: Any) -> str:
     """Форматирование значения колонки в строку."""
 
-    if isinstance(col, Union[str, UUID,]):
+    if isinstance(col, Union[str, UUID]):
         col = str(col).replace("'", "''")
         return f"'{col}'"
     elif isinstance(col, datetime):
@@ -52,7 +52,7 @@ def make_chunk(string: str,
 def generate_chunks(data_frame: DTYPE,  # type: ignore
                     frame_type: str,
                     is_compressed: bool = True,
-                    chunk_size: int = CHUNK_SIZE,) -> Generator[bytes, None, None,]:
+                    chunk_size: int = CHUNK_SIZE,) -> Generator[bytes, None, None]:
     """Разбить DataFrame на куски не более чем CHUNK_SIZE."""
 
     if frame_type == "dask":

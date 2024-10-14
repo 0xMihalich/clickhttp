@@ -37,7 +37,7 @@ def read_frame(sess: Session,  # noqa: C901
         return Frame([], [], None, 0.0, 0,)
 
     json: JsonType = loads(resp.content)  # type: ignore
-    stats: Dict[str, Union[int, float,]] = json["statistics"]
+    stats: Dict[str, Union[int, float]] = json["statistics"]
 
     columns: List[str] = [col["name"] for col in json["meta"]]
     types: List[str] = [col["type"] for col in json["meta"]]
@@ -45,7 +45,7 @@ def read_frame(sess: Session,  # noqa: C901
     time_read: float = stats["elapsed"]
     bytes_read: int = stats["bytes_read"]
 
-    dt_cols: Dict[int, Union[date, datetime, ZoneInfo,]] = {
+    dt_cols: Dict[int, Union[date, datetime, ZoneInfo]] = {
         num: dt_detect(dtype)
         for num, dtype in enumerate(types)
         if dt_detect(dtype)

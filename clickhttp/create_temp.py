@@ -1,4 +1,4 @@
-from random import randbytes
+from os import urandom
 from typing import List
 
 from requests import Session
@@ -37,7 +37,7 @@ def temp_query(sess: Session,
                                            query=f"describe table ({_query})",
                                            frame_type=FrameType.python,
                                            timeout=timeout,).data
-    table_name: str = "temp_" + randbytes(8).hex()
+    table_name: str = "temp_" + urandom(8).hex()
 
     to_log(f"Generate DDL for temporary table {table_name}")
     column: str = describe[0][0]

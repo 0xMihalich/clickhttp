@@ -47,4 +47,4 @@ def test_session():
                 """
     df = sess.read_frame(query)
 
-    assert df.data[0] == [date.today(), 1, 1.0, True, [1, 2, 3,]]
+    assert df.data[0] == [date.today(), 1, 1.0, True, [1, 2, 3]]

@@ -11,7 +11,7 @@ except ImportError:
 
 
 # Для возможного использования в будущем
-CLICKHOUSE_DTYPES: Dict[str, type,] = {
+CLICKHOUSE_DTYPES: Dict[str, type] = {
     "AggregateFunction": str,
     "Array": list,
     "BIGINT": int,
@@ -97,7 +97,7 @@ CLICKHOUSE_DTYPES: Dict[str, type,] = {
     "MEDIUMINT UNSIGNED": int,
     "MEDIUMTEXT": str,
     "Map": Dict,
-    "MultiPolygon": List[List[List[Tuple[float, float,]]]],
+    "MultiPolygon": List[List[List[Tuple[float, float]]]],
     "NATIONAL CHAR": str,
     "NATIONAL CHAR VARYING": str,
     "NATIONAL CHARACTER": str,
@@ -112,10 +112,10 @@ CLICKHOUSE_DTYPES: Dict[str, type,] = {
     "Nothing": None,
     "Nullable": Enum,
     "Object": object,
-    "Point": Tuple[float, float,],
-    "Polygon": List[List[Tuple[float, float,]]],
+    "Point": Tuple[float, float],
+    "Polygon": List[List[Tuple[float, float]]],
     "REAL": float,
-    "Ring": List[Tuple[float, float,]],
+    "Ring": List[Tuple[float, float]],
     "SET": int,
     "SINGLE": float,
     "SMALLINT": int,
@@ -146,7 +146,7 @@ CLICKHOUSE_DTYPES: Dict[str, type,] = {
 }
 
 
-def dt_detect(dtype: str) -> Union[date, datetime, ZoneInfo,]:
+def dt_detect(dtype: str) -> Union[date, datetime, ZoneInfo]:
     """Определить тип данных, относящийся к datetime."""
 
     if dtype.startswith("Nullable"):

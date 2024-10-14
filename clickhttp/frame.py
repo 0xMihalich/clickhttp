@@ -5,7 +5,7 @@ from typing import List, NamedTuple, NewType, Union
 from .json_type import JsonType
 
 
-_dtypes: list = [JsonType, None,]
+_dtypes: list = [JsonType, None]
 _enums: dict = {"python": list}
 
 try:

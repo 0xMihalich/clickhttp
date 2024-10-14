@@ -53,7 +53,7 @@ class ClickHttpSession:
         self.session_id: str = str(uuid4())
         self.database: str = connection.database
         self.frame_type: _FrameType = frame_type
-        self.headers: Dict[str, str,] = {
+        self.headers: Dict[str, str] = {
             "X-ClickHouse-User": connection.user,
             "X-ClickHouse-Key": connection.password,
             "X-Content-Type-Options": "nosniff",
@@ -160,7 +160,7 @@ class ClickHttpSession:
             if logging:
                 to_log("ClickHttpSession proxy settings clear.")
         else:
-            proxies: Dict[str, str,] = {
+            proxies: Dict[str, str] = {
                 'https': self.proxy,
                 'http': self.proxy,
             }
