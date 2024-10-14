@@ -11,7 +11,7 @@ from .json_type import JsonType
 from .sql_formatter import formatter
 
 
-def read_frame(sess: Session,
+def read_frame(sess: Session,  # noqa: C901
                session_id: str,
                url: str,
                database: str,
@@ -22,12 +22,12 @@ def read_frame(sess: Session,
 
     resp: Response = sess.post(url=url,
                                params={
-                                   "database"  : database,
-                                   "query"     : formatter(query),
+                                   "database": database,
+                                   "query": formatter(query),
                                    "session_id": session_id,
                                },
                                timeout=timeout,)
-    
+
     code: int = resp.status_code
     text: str = resp.text
 
@@ -35,7 +35,7 @@ def read_frame(sess: Session,
         raise FrameError(f"Status code: {code}. Error message: {text}")
     elif not text:
         return Frame([], [], None, 0.0, 0,)
-    
+
     json: JsonType = loads(resp.content)
     stats: Dict[str, Union[int, float,]] = json["statistics"]
 
@@ -85,5 +85,5 @@ def read_frame(sess: Session,
             raise ModuleNotFoundError("vaex not installed. Use: pip install vaex")
     else:
         raise FrameError(f"Unknown type {frame_type.value}.")
-    
+
     return Frame(columns, types, frame, time_read, bytes_read,)

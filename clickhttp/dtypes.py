@@ -7,7 +7,7 @@ from uuid import UUID
 try:
     from zoneinfo import ZoneInfo
 except ImportError:
-    from backports.zoneinfo import ZoneInfo # type: ignore
+    from backports.zoneinfo import ZoneInfo  # type: ignore
 
 
 # Для возможного использования в будущем

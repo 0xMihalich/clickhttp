@@ -38,7 +38,7 @@ def temp_query(sess: Session,
                                            frame_type=FrameType.python,
                                            timeout=timeout,).data
     table_name: str = "temp_" + randbytes(8).hex()
-    
+
     to_log(f"Generate DDL for temporary table {table_name}")
     column: str = describe[0][0]
     table_struct: str = ",\n    ".join(" ".join(column) for column in
@@ -53,6 +53,6 @@ def temp_query(sess: Session,
                                          query=_query,),
                frame_type=FrameType.python,
                timeout=timeout,)
-    
+
     to_log(f"Temporary table {table_name} created.")
     return table_name

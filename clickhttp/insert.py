@@ -45,7 +45,7 @@ def make_chunk(string: str,
 
     if is_compressed:
         return compress(data=string.encode("utf-8"), compresslevel=9,)
-    
+
     return string.encode("utf-8")
 
 
@@ -65,7 +65,7 @@ def generate_chunks(data_frame: DTYPE,
         data_arr = data_frame.to_pandas_df().to_numpy()
     elif frame_type in ("numpy", "python",):
         data_arr = data_frame
-    
+
     io: StringIO = StringIO()
 
     start_row: int = 1
@@ -80,14 +80,14 @@ def generate_chunks(data_frame: DTYPE,
             io.truncate(0)
             io.seek(0)
             start_row = num + 1
-        
+
         io.write(row_string)
 
     to_log(f"Sending chunk with {start_row}—{total_rows} rows from {total_rows} rows.")
     yield make_chunk(io.getvalue(), is_compressed,)
 
 
-def insert_table(sess: Session,
+def insert_table(sess: Session,  # noqa: C901
                  session_id: str,
                  url: str,
                  database: str,
@@ -127,25 +127,25 @@ def insert_table(sess: Session,
                                     is_compressed=is_compressed,
                                     chunk_size=chunk_size,):
             resp: Response = sess.post(url=url + sep + "date_time_input_format=best_effort",
-                                        data=data,
-                                        params={
-                                            "database"  : database,
-                                            "query"     : f"INSERT INTO {table} {columns}VALUES",
+                                       data=data,
+                                       params={
+                                            "database": database,
+                                            "query": f"INSERT INTO {table} {columns}VALUES",
                                             "session_id": session_id,
-                                        },
-                                        timeout=timeout,)
-            
+                                       },
+                                       timeout=timeout,)
+
             if resp.status_code != 200:
                 raise InsertError(resp.text)
-            
+
             to_log("Insert chunk success.")
     except Exception as _errmsg:
         errmsg: str = _errmsg
 
     if is_compressed:
         del sess.headers["Content-Encoding"]
-    
+
     if errmsg:
         raise InsertError(errmsg)
-    
+
     to_log("Insert operation success.")

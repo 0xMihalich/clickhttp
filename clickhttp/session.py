@@ -55,7 +55,7 @@ class ClickHttpSession:
         self.frame_type: _FrameType = frame_type
         self.headers: Dict[str, str,] = {
             "X-ClickHouse-User": connection.user,
-            "X-ClickHouse-Key" : connection.password,
+            "X-ClickHouse-Key": connection.password,
             "X-Content-Type-Options": "nosniff",
             "X-ClickHouse-Format": "JSONCompact",
         }
@@ -73,9 +73,9 @@ class ClickHttpSession:
     def __str__(self: "ClickHttpSession") -> str:
         """Строковое представление класса."""
 
-        status:     str = "Closed"     if self.is_closed     else "Open"
-        session_id: str = "Undefined"  if self.is_closed     else self.session_id
-        mode:       str = "Compressed" if self.is_compressed else "Normal"
+        status: str = "Closed" if self.is_closed else "Open"
+        session_id: str = "Undefined" if self.is_closed else self.session_id
+        mode: str = "Compressed" if self.is_compressed else "Normal"
 
         return ("ClickHttpSession object."
                 f"\nStatus:      {status}"
@@ -162,13 +162,13 @@ class ClickHttpSession:
         else:
             proxies: Dict[str, str,] = {
                 'https': self.proxy,
-                'http' : self.proxy,
+                'http': self.proxy,
             }
             self.sess.proxies.update(proxies)
             if logging:
                 to_log(f"ClickHttpSession change proxy settings with proxy '{proxy}'.")
 
-        self.sess.trust_env=False
+        self.sess.trust_env = False
 
     def execute(self: "ClickHttpSession",
                 query: str,) -> None:

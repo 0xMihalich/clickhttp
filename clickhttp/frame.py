@@ -23,7 +23,7 @@ except ImportError:
     warning("numpy not installed. Use: pip install numpy")
     from datetime import datetime
     from typing import Any
-    
+
     class datetime64(datetime):
         """Заплатка для неверного импорта."""
 
@@ -52,7 +52,7 @@ except ImportError:
     warning("vaex not installed. Use: pip install vaex")
 
 
-DTYPE: TypeAlias = Union[tuple(_dtypes)] # type: ignore
+DTYPE: TypeAlias = Union[tuple(_dtypes)]  # type: ignore
 
 
 class _FrameType(Enum):
@@ -80,8 +80,8 @@ FrameType: _FrameType = _FrameType('FrameType', _enums)
 class Frame(NamedTuple):
     """Полученный датафрейм."""
 
-    columns   : List[str]
-    types     : List[str]
-    data      : DTYPE
-    time_read : float
+    columns: List[str]
+    types: List[str]
+    data: DTYPE
+    time_read: float
     bytes_read: int

@@ -15,7 +15,7 @@ def get_conn(connection_id: str,) -> UserConn:
     """Получение UserConn из названия коннекта BaseHook."""
 
     try:
-        from airflow.hooks.base import BaseHook # type: ignore
+        from airflow.hooks.base import BaseHook  # type: ignore
 
         conn = BaseHook.get_connection(connection_id)
 
