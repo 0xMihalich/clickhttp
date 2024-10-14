@@ -1,16 +1,4 @@
-from typing import Any, Dict, List, TypeAlias, Union
+from typing import Any, Dict, List, NewType, Union
 
 
-JsonType: TypeAlias = List[
-    List[
-        Union[
-            str,
-            int,
-            float,
-            bool,
-            None,
-            Dict[str, Any,],
-            List[Any],
-        ],
-    ]
-]
+JsonType = NewType("JsonType", List[List[Union[str, int, float, bool, None, Dict[str, Any,], List[Any],]]])
