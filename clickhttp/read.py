@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from json import loads
 from typing import Dict, List, Union
+from io import BytesIO
 
 from requests import Session, Response
 
@@ -8,6 +9,7 @@ from .dtypes import dt_detect, date, datetime, ZoneInfo
 from .errors import FrameError
 from .frame import FrameType, Frame, _FrameType
 from .json_type import JsonType
+from .insert import CHUNK_SIZE
 from .sql_formatter import formatter
 
 
@@ -26,17 +28,26 @@ def read_frame(sess: Session,  # noqa: C901
                                    "query": formatter(query),
                                    "session_id": session_id,
                                },
-                               timeout=timeout,)
+                               timeout=timeout,
+                               stream=True,)
 
     code: int = resp.status_code
-    text: str = resp.text
 
     if code != 200:
-        raise FrameError(f"Status code: {code}. Error message: {text}")
-    elif not text:
+        raise FrameError(f"Status code: {code}. Error message: {resp.text or ''}")
+    elif not resp.text:
         return Frame([], [], None, 0.0, 0,)
+    
+    content: BytesIO = BytesIO()
 
-    json: JsonType = loads(resp.content)  # type: ignore
+    for chunk in resp.iter_content(chunk_size=CHUNK_SIZE):
+        if chunk:
+            content.write(chunk)
+        del chunk
+
+    json: JsonType = loads(content.getvalue())
+    del content
+
     stats: Dict[str, Union[int, float]] = json["statistics"]
 
     columns: List[str] = [col["name"] for col in json["meta"]]
