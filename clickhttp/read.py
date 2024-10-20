@@ -38,7 +38,7 @@ def read_frame(sess: Session,  # noqa: C901
         raise FrameError(f"Status code: {code}. Error message: {resp.text or ''}")
     elif not resp.text:
         return Frame([], [], None, 0.0, 0,)
-    
+
     content: BytesIO = BytesIO()
     magic_sig: bytes = b'\x1f\x8b'  # for check gzip signature
 
