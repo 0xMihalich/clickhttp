@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from gzip import decompress
 from json import loads
 from typing import Dict, List, Union
 from io import BytesIO
@@ -39,13 +40,21 @@ def read_frame(sess: Session,  # noqa: C901
         return Frame([], [], None, 0.0, 0,)
     
     content: BytesIO = BytesIO()
+    magic_sig: bytes = b'\x1f\x8b'  # for check gzip signature
 
     for chunk in resp.iter_content(chunk_size=CHUNK_SIZE):
         if chunk:
             content.write(chunk)
         del chunk
 
-    json: JsonType = loads(content.getvalue())
+    content.seek(0)
+
+    if content.read(2) == magic_sig:
+        json: JsonType = loads(decompress(content.getvalue()))
+    else:
+        json: JsonType = loads(content.getvalue())
+
+    content.close()
     del content
 
     stats: Dict[str, Union[int, float]] = json["statistics"]
