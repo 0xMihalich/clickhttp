@@ -108,21 +108,21 @@
 
 ### Установка из директории
 
-    ```shell
-    pip install .
-    ```
+```shell
+pip install .
+```
 
 ### Установка из git
 
-    ```shell
-    pip install git+https://github.com/0xMihalich/clickhttp
-    ```
+```shell
+pip install git+https://github.com/0xMihalich/clickhttp
+```
 
 ### Установка из pip
 
-    ```shell
-    pip install clickhttp
-    ```
+```shell
+pip install clickhttp
+```
 
 ## Документация
 
