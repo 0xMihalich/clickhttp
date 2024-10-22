@@ -8,7 +8,8 @@ shutil.rmtree("clickhttp.egg-info", ignore_errors=True,)
 with open(file="README.md", mode="r", encoding="utf-8",) as f:
     long_description = f.read()
 
-long_description += """______________________________________________________________________________________________________________________
+long_description += \
+"""______________________________________________________________________________________________________________________
 
 """
 
