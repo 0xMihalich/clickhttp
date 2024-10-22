@@ -18,9 +18,10 @@ GZIP_STR: str = "/?enable_http_compression=1&http_zlib_compression_level=9"
 
 
 class ClickHttpSession:
-    """Выполнение нескольких запросов к Clickhouse внутри одной сессии.
-       Данный класс не проводит валидацию connection на соответствие БД Clickhouse,
-       данное дествие должен выполнять пользователь до инициализации класса."""
+    """Executing multiqueries to Clickhouse within a single session.
+       This class does not validate the connection for compatibility
+       with the Clickhouse database; this action must be performed
+       by the user before initializing the class."""
 
     def __init__(self: "ClickHttpSession",
                  connection: Union[str, UserConn],
@@ -29,7 +30,7 @@ class ClickHttpSession:
                  is_compressed: bool = True,
                  proxy: Optional[str] = None,
                  timeout: Optional[int] = None,) -> None:
-        """Инициализация класса."""
+        """Class initialization."""
 
         if isinstance(connection, str):
             connection: UserConn = get_conn(connection)
@@ -71,7 +72,7 @@ class ClickHttpSession:
         to_log(f"Clickhouse Multi-Query session started. Session ID: {self.session_id}.")
 
     def __str__(self: "ClickHttpSession") -> str:
-        """Строковое представление класса."""
+        """String representation of class."""
 
         status: str = "Closed" if self.is_closed else "Open"
         session_id: str = "Undefined" if self.is_closed else self.session_id
@@ -83,12 +84,12 @@ class ClickHttpSession:
                 f"\nServer Mode: {mode}")
 
     def __repr__(self: "ClickHttpSession") -> str:
-        """Строковое отображение класса в интерпретаторе."""
+        """String representation of class in interpreter."""
 
         return self.__str__()
 
     def __enter__(self: "ClickHttpSession") -> "ClickHttpSession":
-        """Начало работы с контекстным менеджером with."""
+        """Starting to work with context manager."""
 
         if self.is_closed:
             self.reopen()
@@ -96,19 +97,19 @@ class ClickHttpSession:
         return self
 
     def __exit__(self: "ClickHttpSession", *_: Any) -> None:
-        """Завершение работы с контекстным менеджером with."""
+        """Ending work with context manager."""
 
         self.close()
 
     @property
     def output_format(self: "ClickHttpSession") -> str:
-        """Тип возвращаемого DataFrame."""
+        """Type of returned DataFrame."""
 
         return self.frame_type.name
 
     @property
     def change_mode(self: "ClickHttpSession") -> None:
-        """Изменить режим работы сервера (сжатие/без сжатия)."""
+        """Change server operating mode (compression/no compression)."""
 
         if self.is_compressed:
             self.url: str = self.url[:-57]
@@ -125,7 +126,7 @@ class ClickHttpSession:
         self.sess.headers.update(self.headers)
 
     def close(self: "ClickHttpSession") -> None:
-        """Закрытие сессии."""
+        """Closing session."""
 
         if not self.is_closed:
             self.sess.close()
@@ -135,7 +136,7 @@ class ClickHttpSession:
             to_log("Clickhouse Multi-Query already closed.")
 
     def reopen(self: "ClickHttpSession") -> None:
-        """Открытие новой сессии. Старая сессия будет закрыта."""
+        """Opening with a new session. Old session will be closed."""
 
         if not self.is_closed:
             self.sess.close()
@@ -151,7 +152,7 @@ class ClickHttpSession:
     def set_proxy(self: "ClickHttpSession",
                   proxy: Optional[str] = None,
                   logging: bool = True,) -> None:
-        """Задать прокси-сервер для текущей сессии."""
+        """Set a proxy server for current session."""
 
         self.proxy = proxy
 
@@ -172,14 +173,14 @@ class ClickHttpSession:
 
     def execute(self: "ClickHttpSession",
                 query: str,) -> None:
-        """Выполнить запрос к базе без возвращения результата."""
+        """Execute query without returning a result."""
 
         self.read_frame(query)
         to_log("Command send.")
 
     def read_frame(self: "ClickHttpSession",
                    query: str,) -> Frame:
-        """Получить ответ сервера как дата фрейм."""
+        """Retrieve server response as a DataFrame."""
 
         if self.is_closed:
             raise ClosedError()
@@ -194,8 +195,8 @@ class ClickHttpSession:
 
     def temp_query(self: "ClickHttpSession",
                    query: str,) -> str:
-        """Записать результат запроса во временную таблицу.
-           После выполнения возвращает название временной таблицы."""
+        """Write query result to a temporary table.
+           After execution, it returns name of temporary table."""
 
         if self.is_closed:
             raise ClosedError()
@@ -209,8 +210,8 @@ class ClickHttpSession:
 
     def send_multiquery(self: "ClickHttpSession",
                         multiquery: str,) -> Frame:
-        """Отправить множественный запрос на сервер.
-           Возвращается только последний фрейм."""
+        """Send a multiquery to server.
+           Only last frame is returned."""
 
         if self.is_closed:
             raise ClosedError()
@@ -227,7 +228,7 @@ class ClickHttpSession:
                      table: str,
                      data_frame: DTYPE,  # type: ignore
                      use_columns: bool = True,) -> None:
-        """Запись данных из DataFrame в целевую таблицу."""
+        """Writing data from DataFrame to target table."""
 
         if self.is_closed:
             raise ClosedError()

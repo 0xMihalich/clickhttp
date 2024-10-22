@@ -1,29 +1,35 @@
-В - Для чего это нужно?
-О - В некоторых ETL процессах возникает необходимость в создании нескольких CTE с последующей агрегацией данных в итоговую выборку.
-Clickhouse не создает CTE, а каждый раз выполняет один и тот же запрос, объявленный в секции with во всех местах основного запроса,
-тратя впустую ресурсы ОЗУ и вычислительные мощности сервера.
-Альтернативой CTE может быть временная таблица с данными, при этом Clickhouse не поддерживает выполнение множественных запросов.
-Данная библиотека является альтернативой clickhouse-client и clickhouse_driver. Она ни сколько не претендует на звание лучшей,
-тем не менее некоторые возможности данного решения могут показаться интересными.
-Главная цель библиотеки - выполнение множественных запросов внутри одной сессии, решающее проблему создания Temporary Table с
-последующим получением данных.
+Q: What is this needed for?
 
-В - Почему clickhttp.ClickHttpSession не работает в асинхронном режиме, если Clickhouse, как уверяют разработчики, является асинхронным?
-О - Хотя сервер Clickhouse выполняет работу в асинхронном режиме, работа внутри одной сессии может быть только синхронной
-и задержка между запросами внутри одной сессии не должна превышать более 60 секунд.
+A: In some ETL processes, there is a need to create multiple CTEs followed by data aggregation into a final selection.
+Clickhouse does not create CTEs; instead, it executes the same query declared in the WITH section every time in all places of the main query,
+wasting RAM resources and server computing power. An alternative to CTEs could be a temporary table with data, but Clickhouse does not
+support executing multiple queries. This library serves as an alternative to clickhouse-client and clickhouse_driver.
+It does not claim to be the best; however, some features of this solution may seem interesting.
+The main goal of the library is to execute multiple queries within a single session, addressing the issue of creating
+a Temporary Table with subsequent data retrieval.
 
-В - Почему в файле requirements.txt только backports.zoneinfo и requests? Куда делись numpy, pandas, polars, dask, vaex?
-О - Начиная с версии 0.0.5 все импорты, не относящиеся непосредственно к работе Сессия->Запрос | Сессия->Ответ, были исключены
-из явных импортов и теперь добавляются только если ранее они были установлены пользователем, поскольку не все пользователи
-используют в своей работе все заявленные форматы Dataframe. Кому-то достаточно pandas, кому-то numpy, а кто-то пользуется vaex.
-Теперь импорт библиотеки выведет в warning сообщения об отсутствующих компонентах, но продолжит работу.
-В случае, если у пользователя нет даже numpy, все получаемые и передаваемые данные будут получены в формате вложенных списков python,
-иначе будет возможность выбора типа принимаемого DataFrame, а по умолчанию класс будет инициализирован с типом pandas.DataFrame.
+Q: Why does clickhttp.ClickHttpSession not work in asynchronous mode if Clickhouse, as developers claim, is asynchronous?
 
-В - Как проверить какие типы датафрейм у меня доступны на данный момент?
-О - Вы можете использовать встроенный метод get_names для clickhttp.FrameType. Выполнив данный метод Вы получите список доступных форматов.
+A: Although the Clickhouse server operates in asynchronous mode, operations within a single session can only be synchronous,
+and the delay between requests within a single session should not exceed 60 seconds.
 
-В - Установил недостающую библиотеку, но при выполнении clickhttp.FrameType.get_names() ее нет. Что делать?
-О - 1. Убедитесь, что библиотека установлена в правильную версию python или в верное виртуальное окружение.
-2. Убедитесь, что интерпретатор был перезапущен после установки библиотеки.
-3. После выполнения первых двух шагов повторно выполните clickhttp.FrameType.get_names() и убедитесь, что необходимый формат появился.
+Q: Why are only backports.zoneinfo and requests listed in the requirements.txt file? Where are numpy, pandas, polars, dask, vaex?
+
+A: Starting from version 0.0.5, all imports not directly related to the operation of Session->Request | Session->Response have been excluded
+from explicit imports and are now added only if they were previously installed by the user, as not all users utilize all declared DataFrame
+formats in their work. Some may only need pandas, others numpy, while some use vaex. Now, importing the library will issue warning messages
+about missing components but will continue to function. If a user does not even have numpy, all received and transmitted data will be obtained
+in the format of nested Python lists; otherwise, there will be an option to choose the type of DataFrame received,
+with the default class initialized as pandas.DataFrame.
+
+Q: How can I check which DataFrame types are currently available to me?
+
+A: You can use the built-in method get_names for clickhttp.FrameType. Executing this method will provide you with a list of available formats.
+
+Q: I installed the missing library, but when executing clickhttp.FrameType.get_names(), it is not there. What should I do?
+
+A:
+
+1. Ensure that the library is installed in the correct version of Python or in the correct virtual environment.
+2. Make sure that the interpreter has been restarted after installing the library.
+3. After completing the first two steps, re-execute clickhttp.FrameType.get_names() and verify that the required format has appeared.

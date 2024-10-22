@@ -25,7 +25,7 @@ except ImportError:
     from typing import Any
 
     class datetime64(datetime):
-        """Заплатка для неверного импорта."""
+        """Patch for incorrect import."""
 
         def astype(self: datetime, cls: Any) -> datetime:
             return self
@@ -56,17 +56,17 @@ DTYPE = NewType("DTYPE", Union[tuple(_dtypes)])
 
 
 class _FrameType(Enum):
-    """Класс FrameType."""
+    """FrameType class."""
 
     @classmethod
     def get_names(cls: "_FrameType") -> List[str]:
-        """Вернуть список доступных значений."""
+        """Return a list of available values."""
 
         return list(cls._member_map_)
 
     @classmethod
     def set(cls: "_FrameType", name: str) -> "_FrameType":
-        """_FrameType.name если существует иначе _FrameType.python."""
+        """_FrameType.name if it exists; otherwise, _FrameType.python."""
 
         if name in cls.get_names():
             return cls[name]
@@ -78,7 +78,7 @@ FrameType: _FrameType = _FrameType('FrameType', _enums)
 
 
 class Frame(NamedTuple):
-    """Полученный датафрейм."""
+    """Retrieved DataFrame."""
 
     columns: List[str]
     types: List[str]

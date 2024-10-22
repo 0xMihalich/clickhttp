@@ -21,7 +21,7 @@ def read_frame(sess: Session,  # noqa: C901
                query: str,
                frame_type: _FrameType = FrameType.set("pandas"),
                timeout: int = 10,) -> Frame:
-    """Результат выполнения запроса как датафрейм."""
+    """Result of query execution as DataFrame."""
 
     resp: Response = sess.post(url=url,
                                params={

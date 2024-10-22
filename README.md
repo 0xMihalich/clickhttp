@@ -1,103 +1,103 @@
-# библиотека clickhttp для работы с БД Clickhouse по HTTP-протоколу
+# Clickhttp Library for Working with Clickhouse Database via HTTP Protocol
 
-## Возможности
+## Features
 
-* чтение DataFrame на основании SQL-запроса
-* выполнение множественного SQL-запроса с возвратом последнего результата как DataFrame
-* автоматическое создание временной таблицы с данными на движке MergeTree на основании запроса и возврат ее названия
-* insert в таблицу из DataFrame
-* поддержка compressed режима работы (сервер принимает и отправляет данные, упакованные в gzip)
-* поддержка работы через прокси-сервер
-* возможность задать timeout для сессии
-* поддержка DataFrame в форматах: dask, numpy, pandas, polars, python, vaex
-* инициализация сессии через Airflow connection id либо ручное указание коннектора
+* Reading DataFrame based on SQL queries
+* Executing multiple SQL queries with the return of the last result as a DataFrame
+* Automatic creation of a temporary table with data on the MergeTree engine based on the query and returning its name
+* Inserting into a table from a DataFrame
+* Support for compressed mode (the server accepts and sends data packed in gzip)
+* Support for working through a proxy server
+* Ability to set a timeout for the session
+* Support for DataFrame in formats: dask, numpy, pandas, polars, python, vaex
+* Session initialization via Airflow connection ID or manual specification of the connector
 
-## Состав библиотеки
+## Composition of library
 
 *clickhouse_multiquery*
- — Самостоятельная функция для выполнения множественных запросов к РСУБД Clickhouse без возврата данных.
+ — Standalone function for executing multiquery to Clickhouse DBMS without returning data
 
 *ClickHttpSession*
-— Класс для работы с Clickhouse по HTTP-протоколу.
+— Class for working with Clickhouse via HTTP protocol
 
 *UserConn*
-— Объект NamedTuple для создания соединения. Содержит данные для инициализации:
+— NamedTuple object for creating a connection. Contains data for initialization:
 
-* user      — Тип: str, логин клиента
-* password  — Тип: str, пароль клиента
-* host      — Тип: str, адрес хоста
-* port      — Тип: int, порт для http подключения (при стандартной настройке сервера обычно равен 8123)
-* database  — Тип: str, схема в БД (может быть None)
+* user      — Type: str, client login
+* password  — Type: str, client password
+* host      — Type: str, host address
+* port      — Type: int, port for HTTP connection (typically 8123 with standard server settings)
+* database  — Type: str, schema in the database (can be None)
 
 *get_conn*
-— Функция для получения объекта UserConn на основании Airflow Connection ID
+— Function for retrieving UserConn object based on Airflow Connection ID
 
 *ClickHttpError*
-— Базовый класс ошибки
+— Base error class
 
 *ClosedError*
-— Ошибка при попытке выполнить действие после закрытия сессии
+— Error when attempting to perform an action after session has been closed
 
 *FrameError*
-— Ошибка при получении DataFrame
+— Error retrieving DataFrame
 
 *FrameMultiQueryError*
-— Ошибка при выполнении множественного запроса
+— Error executing multiquery
 
 *InsertError*
-— Ошибка при выполнении Isert в таблицу
+— Error executing insert into table
 
 *FrameType*
-— Enum, перечисляющий поддерживаемые типы DataFrame.
-  Необходим для определения выходного формата данных для операций чтения при выполнении методов read_frame и send_multiquery.
-  Для выбора необходимого типа данных нужно передать в класс параметр frame_type=FrameType.<необходимый тип датафрейм>.
-  Так же необходимо понимать, что сама библиотека не устанавливает дополнительные модули и использует те, что пользователь установил самостоятельно.
-  При инициализации библиотеки все неустановленные модули будут выведены в warning message с командой для установки.
+— Enum that lists the supported DataFrame types.
+  It is necessary for determining output data format for read operations when executing the methods read_frame and send_multiquery.
+  To select required data type, you need to pass parameter at class: frame_type=FrameType.<your_required_data_type>.
+  It is also important to understand that library does not install additional modules and uses those that user has installed independently.
+  During library initialization, all uninstalled modules will be displayed in a warning message along with a command for installation.
 
-* dask   — Датафрейм в формате dask.dataframe.DataFrame
-* numpy  — Датафрейм в формате numpy.ndarray. Имена колонок отсутствуют
-* pandas — Датафрейм в формате pandas.DataFrame
-* polars — Датафрейм в формате polars.DataFrame
-* python — Вложенный список стандартных объектов python. Имена колонок отсутствуют
-* vaex   — Датафрейм в формате vaex.dataframe.DataFrameLocal
+* dask   — DataFrame as format dask.dataframe.DataFrame
+* numpy  — DataFrame as format numpy.ndarray. Column names are absent
+* pandas — DataFrame as format pandas.DataFrame
+* polars — DataFrame as format polars.DataFrame
+* python — Nested list of standard Python objects. Column names are absent
+* vaex   — DataFrame as format vaex.dataframe.DataFrameLocal
 
 *Frame*
-— Объект NamedTuple, возвращаемый при выполнении методов read_frame и send_multiquery для класса ClickHttpSession
+— NamedTuple object returned when executing the methods read_frame and send_multiquery for ClickHttpSession class
 
-* columns    — список названий колонок
-* types      — список оригинальных типов данных
-* data       — DataFrame с данными
-* time_read  — время выполнения запроса сервером Clickhouse в мс
-* bytes_read — количество байт, отправленных сервером
+* columns    — list of column names
+* types      — list of original data types
+* data       — DataFrame containing data
+* time_read  — time taken to execute query by Clickhouse server in ms
+* bytes_read — number of bytes sent by the server
 
-## Методы класса
+## Class Methods
 
-    close           — Закрыть сессию. Выполняется при использовании контекстного менеджера with.
-    execute         — Выполнить запрос к базе без возвращения результата.
-    insert_frame    — Записать данные из DataFrame в таблицу.
-    read_frame      — Вернуть результат запроса в виде DataFrame.
-    reopen          — Открыть новую сессию. В случае если сессия уже открыта, закроет текущую и откроет новую.
-    send_multiquery — Выполнить множественный запрос к БД и вернуть результат последнего запроса как DataFrame.
-    set_proxy       — Указать прокси-сервер для соединения. Запуск без параметра удаляет настройку прокси если она ранее была задана.
-    temp_query      — На основании запроса создать временную таблицу с данными и вернуть ее название.
+    close           — Close the session. Executed when using context manager with.
+    execute         — Execute a query to the database without returning a result.
+    insert_frame    — Write data from DataFrame to table.
+    read_frame      — Return result of query as a DataFrame.
+    reopen          — Open a new session. If a session is already open, it will close the current one and open a new one.
+    send_multiquery — Execute multiquerн to database and return result of last query as DataFrame.
+    set_proxy       — Specify a proxy server for connection. Running without parameters removes a proxy setting if it was previously specified.
+    temp_query      — Create a temporary table with data based on sended query and return its name.
 
-## Статические методы, вложенные объекты и атрибуты
+## Static Methods, Nested Objects, and Attributes
 
-    change_mode     — Статический метод. Меняет режим выполнения запросов (сжатие/без сжатия).
-    chunk_size      — Атрибут. Размер кусков отправляемого фрейма в байтах, по умолчанию 20мб. Может быть задан при инициализации класса.
-    database        — Атрибут. Схема в БД Clickhouse. Значение берется из объекта UserConn либо connection_id Airflow. Задается при инициализации класса.
-    frame_type      — Enum-объект FrameType, по умолчанию FrameType.pandas. Задается при инициализации класса FrameType.
-    headers         — Заголовки передаваемых запросов. Формируется при инициализации класса, содержит персональные данные.
-    is_closed       — Атрибут. Булево, при открытой сессии True.
-    is_compressed   — Атрибут. Булево, указывающее на сжатие пакетов для отправки и получения, по умолчанию True. Может быть задан при инициализации класса.
-    output_format   — Статический метод. Отображает выбранный метод получения DataFrame от сервера.
-    proxy           — Атрибут. Строка адреса прокси-сервера, по умолчанию отсутствует. Может быть задан при инициализации класса.
-    session_id      — Атрибут. Уникальный ID текущей сессии как строковое представление UUIDv4. Создается автоматически.
-    sess            — Экземпляр класса requests.Session
-    timeout         — Атрибут. Время ожидания ответа от сервера в секундах, по умолчанию 10. Может быть задан при инициализации класса.
-    url             — Атрибут. Адрес сервера, формируется при инициализации класса.
+    change_mode     — Static method. Changes the query execution mode (compression/no compression).
+    chunk_size      — Attribute. Size of the chunks of the sent frame in bytes, default is 50 MB. Can be specified during class initialization.
+    database        — Attribute. Schema in the Clickhouse database. The value is taken from the UserConn object or Airflow connection_id. Set during class initialization.
+    frame_type      — Enum object FrameType, default is FrameType.pandas. Set during class initialization.
+    headers         — Headers of the transmitted requests. Formed during class initialization, contains personal data.
+    is_closed       — Attribute. Boolean, True when the session is open.
+    is_compressed   — Attribute. Boolean indicating whether packets are compressed for sending and receiving, default is True. Can be specified during class initialization.
+    output_format   — Static method. Displays the selected method for obtaining the DataFrame from the server.
+    proxy           — Attribute. String address of the proxy server, default is absent. Can be specified during class initialization.
+    session_id      — Attribute. Unique ID of the current session as a string representation of UUIDv4. Created automatically.
+    sess            — Instance of the requests.Session class.
+    timeout         — Attribute. Time to wait for a response from the server in seconds, default is 10. Can be specified during class initialization.
+    url             — Attribute. Address of the server, formed during class initialization.
 
-## Объявленные магические методы класса (без описания)
+## Declared magic methods of the class (without description)
 
     __enter__
     __exit__
@@ -106,142 +106,146 @@
 
 ## Installation (Windows/Linux/MacOs)
 
-### Установка из директории
+### Install from directory
 
 ```shell
 pip install .
 ```
 
-### Установка из git
+### Install from git
 
 ```shell
 pip install git+https://github.com/0xMihalich/clickhttp
 ```
 
-### Установка из pip
+### Install from pip
 
 ```shell
 pip install clickhttp
 ```
 
-## Документация
+## Examples
 
-### Examples
+Examples of usage are described in examples.ipynb
 
-Примеры работы описаны в examples.ipynb
+[Download examples.ipynb file from link on Google Drive](https://drive.google.com/file/d/1NiZtHW8Nmj1IUBTwmLm8exbkttydhkG5/)
 
-[Скачать файл examples.ipynb по ссылке в google](https://drive.google.com/file/d/1NiZtHW8Nmj1IUBTwmLm8exbkttydhkG5/)
+## FAQ
 
-### FAQ
+Q: What is this needed for?
 
-В: Для чего это нужно?
+A: In some ETL processes, there is a need to create multiple CTEs followed by data aggregation into a final selection.
+Clickhouse does not create CTEs; instead, it executes the same query declared in the WITH section every time in all places of the main query,
+wasting RAM resources and server computing power. An alternative to CTEs could be a temporary table with data, but Clickhouse does not
+support executing multiple queries. This library serves as an alternative to clickhouse-client and clickhouse_driver.
+It does not claim to be the best; however, some features of this solution may seem interesting.
+The main goal of the library is to execute multiple queries within a single session, addressing the issue of creating
+a Temporary Table with subsequent data retrieval.
 
-О: В некоторых ETL процессах возникает необходимость в создании нескольких CTE с последующей агрегацией данных в итоговую выборку.
-Clickhouse не создает CTE, а каждый раз выполняет один и тот же запрос, объявленный в секции with во всех местах основного запроса,
-тратя впустую ресурсы ОЗУ и вычислительные мощности сервера.
-Альтернативой CTE может быть временная таблица с данными, при этом Clickhouse не поддерживает выполнение множественных запросов.
-Данная библиотека является альтернативой clickhouse-client и clickhouse_driver. Она ни сколько не претендует на звание лучшей,
-тем не менее некоторые возможности данного решения могут показаться интересными.
-Главная цель библиотеки - выполнение множественных запросов внутри одной сессии, решающее проблему создания Temporary Table с
-последующим получением данных.
+Q: Why does clickhttp.ClickHttpSession not work in asynchronous mode if Clickhouse, as developers claim, is asynchronous?
 
-В: Почему clickhttp.ClickHttpSession не работает в асинхронном режиме, если Clickhouse, как уверяют разработчики, является асинхронным?
+A: Although the Clickhouse server operates in asynchronous mode, operations within a single session can only be synchronous,
+and the delay between requests within a single session should not exceed 60 seconds.
 
-О: Хотя сервер Clickhouse выполняет работу в асинхронном режиме, работа внутри одной сессии может быть только синхронной
-и задержка между запросами внутри одной сессии не должна превышать более 60 секунд.
+Q: Why are only backports.zoneinfo and requests listed in the requirements.txt file? Where are numpy, pandas, polars, dask, vaex?
 
-В: Почему в файле requirements.txt только backports.zoneinfo и requests? Куда делись numpy, pandas, polars, dask, vaex?
+A: Starting from version 0.0.5, all imports not directly related to the operation of Session->Request | Session->Response have been excluded
+from explicit imports and are now added only if they were previously installed by the user, as not all users utilize all declared DataFrame
+formats in their work. Some may only need pandas, others numpy, while some use vaex. Now, importing the library will issue warning messages
+about missing components but will continue to function. If a user does not even have numpy, all received and transmitted data will be obtained
+in the format of nested Python lists; otherwise, there will be an option to choose the type of DataFrame received,
+with the default class initialized as pandas.DataFrame.
 
-О: Начиная с версии 0.0.5 все импорты, не относящиеся непосредственно к работе Сессия->Запрос | Сессия->Ответ, были исключены
-из явных импортов и теперь добавляются только если ранее они были установлены пользователем, поскольку не все пользователи
-используют в своей работе все заявленные форматы Dataframe. Кому-то достаточно pandas, кому-то numpy, а кто-то пользуется vaex.
-Теперь импорт библиотеки выведет в warning сообщения об отсутствующих компонентах, но продолжит работу.
-В случае, если у пользователя нет даже numpy, все получаемые и передаваемые данные будут получены в формате вложенных списков python,
-иначе будет возможность выбора типа принимаемого DataFrame, а по умолчанию класс будет инициализирован с типом pandas.DataFrame.
+Q: How can I check which DataFrame types are currently available to me?
 
-В: Как проверить какие типы датафрейм у меня доступны на данный момент?
+A: You can use the built-in method get_names for clickhttp.FrameType. Executing this method will provide you with a list of available formats.
 
-О: Вы можете использовать встроенный метод get_names для clickhttp.FrameType. Выполнив данный метод Вы получите список доступных форматов.
+Q: I installed the missing library, but when executing clickhttp.FrameType.get_names(), it is not there. What should I do?
 
-В: Установил недостающую библиотеку, но при выполнении clickhttp.FrameType.get_names() ее нет. Что делать?
+A:
 
-О:
+1. Ensure that the library is installed in the correct version of Python or in the correct virtual environment.
+2. Make sure that the interpreter has been restarted after installing the library.
+3. After completing the first two steps, re-execute clickhttp.FrameType.get_names() and verify that the required format has appeared.
 
-1. Убедитесь, что библиотека установлена в правильную версию python или в верное виртуальное окружение.
-2. Убедитесь, что интерпретатор был перезапущен после установки библиотеки.
-3. После выполнения первых двух шагов повторно выполните clickhttp.FrameType.get_names() и убедитесь, что необходимый формат появился.
+## Version History
 
-## История версий
+### 0.1.2
+
+* All docstrings have been translated into English
+* Documentation and examples are now available in two languages
+* Added MIT License
+* Updated setup.py
 
 ### 0.1.1
 
-* Добавлен стриминг при чтении Big Data
-* Проведен рефактор кода для исправления flake8 warnings
-* Исправлены ворнинги в README.md
-* Исправлена проблема совместимости с ранними версиями python
-* В тесты для workflow добавлены версии python 3.7 - 3.13
+* Added streaming for reading Big Data
+* Refactored code to fix flake8 warnings
+* Fixed warnings in README.md
+* Resolved compatibility issues with earlier versions of Python
+* Added Python versions 3.7 - 3.13 to workflow tests
 
 ### 0.1.0
 
-* Добавлена функция проверки объекта соединения на принадлежность к NamedTuple
-* В тесты для workflow добавлена простая проверка работы класса ClickHttpSession
-* Для порта 443 добавлено изменение протокола на https
-* Функция formatter теперь удаляет лишние пробелы
-* В setup.py добавлен url проекта на github
+* Added a function to check if the connection object belongs to NamedTuple
+* Added a simple check for the ClickHttpSession class in workflow tests
+* Changed the protocol to HTTPS for port 443
+* The formatter function now removes extra spaces
+* Added the project URL to setup.py
 
 ### 0.0.9
 
-* Исправлена проверка объекта connections
-* Добавлены простые тесты для workflows
-* Исправлена опечатка в CHANGELOG.md
+* Fixed the connection object check
+* Added simple tests for workflows
+* Corrected a typo in CHANGELOG.md
 
 ### 0.0.8
 
-* Добавлено форматирование SQL запроса (с удалением комментариев)
-* В requirements.txt добавлена зависимость для сторонней библиотеки sqlparse (форматтер SQL)
-* Разрешено использование сторонних объектов NamedTuple для создания объекта connection
-* CHUNK_SIZE по умолчанию увеличен до 50 МБ
-* Зеркало проекта перенесено на github
+* Added SQL query formatting (with comment removal)
+* Added a dependency for the third-party library sqlparse (SQL formatter) in requirements.txt
+* Allowed the use of third-party NamedTuple objects for creating the connection object
+* Increased default CHUNK_SIZE to 50 MB
+* Project mirror moved to GitHub
 
 ### 0.0.7
 
-* Исправлена ошибка отсутствия файла requirements.txt
+* Fixed the missing requirements.txt file error
 
-### 0.0.6
+## 0.0.6
 
-* Некоторые исправления кода
-* FAQ.txt и CHANGELOG.md перенесены в README.md
-* examples.ipynb загружен на google drive
-* Первая публикация пакета в pip
+* Some code fixes
+* Moved FAQ.txt and CHANGELOG.md to README.md
+* Uploaded examples.ipynb to Google Drive
+* First package publication on pip
 
-### 0.0.5
+## 0.0.5
 
-* Добавлен FAQ.txt
-* Добавлен CHANGELOG.md
-* Обновлен README.md
-* Обновлен examples.ipynb
-* Добавлен необязательный атрибут use_columns для метода insert_table
-* Мелкие исправления кода
+* Added FAQ.txt
+* Added CHANGELOG.md
+* Updated README.md
+* Updated examples.ipynb
+* Added an optional use_columns attribute for the insert_table method
+* Minor code fixes
 
-### 0.0.4
+## 0.0.4
 
-* Версия с предустановленными пакетами dask и vaex перенесена в отдельную ветку
-* В requirements.txt оставлена зависимость только от модуля requests
-* Формирование объектов DTYPE и FrameType производится динамически в зависимости от установленных пользователем компонентов
-* Проведен рефакторинг некоторых функций и методов
-* Добавлен метод execute для отправки команд, не требующих возвращения фрейма
+* The version with pre-installed dask and vaex packages has been moved to a separate branch
+* Only the requests module dependency remains in requirements.txt
+* DTYPE and FrameType objects are created dynamically based on user-installed components
+* Refactored some functions and methods
+* Added an execute method for sending commands that do not require returning a frame
 
-### 0.0.3
+## 0.0.3
 
-* Добавлена поддержка dask.dataframe.DataFrame
-* Добавлена поддержка vaex.dataframe.DataFrameLocal
-* Версия с поддержкой только pandas.DataFrame и polars.DataFrame перенесена в отдельную ветку
+* Added support for dask.dataframe.DataFrame
+* Added support for vaex.dataframe.DataFrameLocal
+* The version supporting only pandas.DataFrame and polars.DataFrame has been moved to a separate branch
 
 ### 0.0.2
 
-* Исправлен вывод в лог некоторых сообщений
-* Замена logging.warning на logging.info для вывода сообщения при выполнении методов
+* Fixed logging output for some messages
+* Replaced logging.warning with logging.info for message output during method execution
 
 ### 0.0.1
 
-Первая версия библиотеки
+First version of the library

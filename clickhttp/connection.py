@@ -2,7 +2,7 @@ from typing import NamedTuple
 
 
 class UserConn(NamedTuple):
-    """Класс NamedTuple для получения данных из объекта BaseHook."""
+    """NamedTuple class for retrieving data from the BaseHook object."""
 
     user: str
     password: str
@@ -12,7 +12,7 @@ class UserConn(NamedTuple):
 
 
 def get_conn(connection_id: str,) -> UserConn:
-    """Получение UserConn из названия коннекта BaseHook."""
+    """Retrieving UserConn from the name of the BaseHook connection."""
 
     try:
         from airflow.hooks.base import BaseHook  # type: ignore

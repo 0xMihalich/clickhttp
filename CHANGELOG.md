@@ -1,74 +1,81 @@
-# История версий
+# Version History
+
+## 0.1.2
+
+* All docstrings have been translated into English
+* Documentation and examples are now available in two languages
+* Added MIT License
+* Updated setup.py
 
 ## 0.1.1
 
-* Добавлен стриминг при чтении Big Data
-* Проведен рефактор кода для исправления flake8 warnings
-* Исправлены ворнинги в README.md
-* Исправлена проблема совместимости с ранними версиями python
-* В тесты для workflow добавлены версии python 3.7 - 3.13
+* Added streaming for reading Big Data
+* Refactored code to fix flake8 warnings
+* Fixed warnings in README.md
+* Resolved compatibility issues with earlier versions of Python
+* Added Python versions 3.7 - 3.13 to workflow tests
 
 ## 0.1.0
 
-* Добавлена функция проверки объекта соединения на принадлежность к NamedTuple
-* В тесты для workflow добавлена простая проверка работы класса ClickHttpSession
-* Для порта 443 добавлено изменение протокола на https
-* Функция formatter теперь удаляет лишние пробелы
-* В setup.py добавлен url проекта на github
+* Added a function to check if the connection object belongs to NamedTuple
+* Added a simple check for the ClickHttpSession class in workflow tests
+* Changed the protocol to HTTPS for port 443
+* The formatter function now removes extra spaces
+* Added the project URL to setup.py
 
 ## 0.0.9
 
-* Исправлена проверка объекта connections
-* Добавлены простые тесты для workflows
-* Исправлена опечатка в CHANGELOG.md
+* Fixed the connection object check
+* Added simple tests for workflows
+* Corrected a typo in CHANGELOG.md
 
 ## 0.0.8
 
-* Добавлено форматирование SQL запроса (с удалением комментариев)
-* В requirements.txt добавлена зависимость для сторонней библиотеки sqlparse (форматтер SQL)
-* Разрешено использование сторонних объектов NamedTuple для создания объекта connection
-* CHUNK_SIZE по умолчанию увеличен до 50 МБ
-* Зеркало проекта перенесено на github
+* Added SQL query formatting (with comment removal)
+* Added a dependency for the third-party library sqlparse (SQL formatter) in requirements.txt
+* Allowed the use of third-party NamedTuple objects for creating the connection object
+* Increased default CHUNK_SIZE to 50 MB
+* Project mirror moved to GitHub
 
 ## 0.0.7
 
-* Исправлена ошибка отсутствия файла requirements.txt
+* Fixed the missing requirements.txt file error
 
 ## 0.0.6
 
-* Некоторые исправления кода
-* FAQ.txt и CHANGELOG.md перенесены в README.md
-* examples.ipynb загружен на google drive
-* Первая публикация пакета в pip
+* Some code fixes
+* Moved FAQ.txt and CHANGELOG.md to README.md
+* Uploaded examples.ipynb to Google Drive
+* First package publication on pip
 
 ## 0.0.5
 
-* Добавлен FAQ.txt
-* Добавлен CHANGELOG.md
-* Обновлен README.md
-* Обновлен examples.ipynb
-* Добавлен необязательный атрибут use_columns для метода insert_table
-* Мелкие исправления кода
+* Added FAQ.txt
+* Added CHANGELOG.md
+* Updated README.md
+* Updated examples.ipynb
+* Added an optional use_columns attribute for the insert_table method
+* Minor code fixes
 
 ## 0.0.4
 
-* Версия с предустановленными пакетами dask и vaex перенесена в отдельную ветку
-* В requirements.txt оставлена зависимость только от модуля requests
-* Формирование объектов DTYPE и FrameType производится динамически в зависимости от установленных пользователем компонентов
-* Проведен рефакторинг некоторых функций и методов
-* Добавлен метод execute для отправки команд, не требующих возвращения фрейма
+* The version with pre-installed dask and vaex packages has been moved to a separate branch
+* Only the requests module dependency remains in requirements.txt
+* DTYPE and FrameType objects are created dynamically based on user-installed components
+* Refactored some functions and methods
+* Added an execute method for sending commands that do not require returning a frame
 
 ## 0.0.3
 
-* Добавлена поддержка dask.dataframe.DataFrame
-* Добавлена поддержка vaex.dataframe.DataFrameLocal
-* Версия с поддержкой только pandas.DataFrame и polars.DataFrame перенесена в отдельную ветку
+* Added support for dask.dataframe.DataFrame
+* Added support for vaex.dataframe.DataFrameLocal
+* The version supporting only pandas.DataFrame and polars.DataFrame has been moved to a separate branch
 
 ## 0.0.2
 
-* Исправлен вывод в лог некоторых сообщений
-* Замена logging.warning на logging.info для вывода сообщения при выполнении методов
+* Fixed logging output for some messages
+* Replaced logging.warning with logging.info for message output during method execution
 
 ## 0.0.1
 
-Первая версия библиотеки
+First version of the library

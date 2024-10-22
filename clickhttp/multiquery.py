@@ -12,10 +12,10 @@ from .sql_formatter import formatter
 
 
 def clickhouse_multiquery(multiquery: str, connection: str,) -> None:
-    """Функция для выполнения мультизапроса в одной сессии.
-       Упрощенный вариант работы !!!ТОЛЬКО ДЛЯ Airflow!!!.
-       Для запросов, требующих работу с temporary table,
-       но не требующих возврат DataFrame с сервера."""
+    """Function for executing multiple queries in a single session.
+       Simplified version for !!!ONLY FOR Airflow!!!.
+       For queries that require working with a temporary table but
+       do not require returning a DataFrame from the server."""
 
     if not isinstance(multiquery, str):
         raise ClickHttpError("Multi-Query must be a string.")
@@ -63,8 +63,8 @@ def send_multiquery(sess: Session,
                     frame_type: _FrameType,
                     multiquery: str,
                     timeout: int = 10,) -> Frame:
-    """Множественный запрос на сервер Clickhouse.
-       Возвращается только последний фрейм."""
+    """Multiple query to the Clickhouse server.
+       Only the last frame is returned."""
 
     _multiquery: List[str] = formatter(multiquery).split(";")
 

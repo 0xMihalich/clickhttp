@@ -1,21 +1,21 @@
 class ClickHttpError(Exception):
-    """Базовый класс ошибки."""
+    """Base error class."""
 
 
 class ClosedError(ClickHttpError):
-    """Ошибка при попытке выполнить действие после закрытия сессии."""
+    """Error when attempting to perform an action after session has been closed."""
 
     def __init__(self):
         super().__init__("Session is closed. Please, reopen session first!")
 
 
 class FrameError(ClickHttpError):
-    """Ошибка получения дата фрейм."""
+    """Error retrieving DataFrame."""
 
 
 class FrameMultiQueryError(ClickHttpError):
-    """Ошибка при выполнении множественного запроса."""
+    """Error executing multiquery."""
 
 
 class InsertError(ClickHttpError):
-    """Ошибка при выполнении Isert в таблицу."""
+    """Error executing insert into table."""

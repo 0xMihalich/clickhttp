@@ -4,6 +4,6 @@ from sqlparse import format
 
 
 def formatter(sql: str) -> str:
-    """Форматирование запроса с удалением комментариев и лишних пробельных символов."""
+    """Formatting query by removing comments and extra whitespace characters."""
 
     return sub('\\s+', ' ', format(sql=sql.rstrip().rstrip(";"), strip_comments=True,)).strip().rstrip()

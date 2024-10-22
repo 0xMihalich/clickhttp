@@ -16,7 +16,7 @@ CHUNK_SIZE: int = 52_428_800
 
 
 def to_str(col: Any) -> str:
-    """Форматирование значения колонки в строку."""
+    """Formatting the column value as a string."""
 
     if isinstance(col, Union[str, UUID]):
         col = str(col).replace("'", "''")
@@ -41,7 +41,7 @@ def to_str(col: Any) -> str:
 
 def make_chunk(string: str,
                is_compressed: bool = True,) -> bytes:
-    """Собрать пакет данных для отправки на сервер."""
+    """Assemble a data packet for sending to the server."""
 
     if is_compressed:
         return compress(data=string.encode("utf-8"), compresslevel=9,)
@@ -53,7 +53,7 @@ def generate_chunks(data_frame: DTYPE,  # type: ignore
                     frame_type: str,
                     is_compressed: bool = True,
                     chunk_size: int = CHUNK_SIZE,) -> Generator[bytes, None, None]:
-    """Разбить DataFrame на куски не более чем CHUNK_SIZE."""
+    """Split the DataFrame into chunks no larger than CHUNK_SIZE."""
 
     if frame_type == "dask":
         data_arr = data_frame.to_dask_array().compute()
@@ -97,7 +97,7 @@ def insert_table(sess: Session,  # noqa: C901
                  chunk_size: int = CHUNK_SIZE,
                  timeout: int = 10,
                  use_columns: bool = True,) -> None:
-    """Записать DataFrame в целевую таблицу."""
+    """Write the DataFrame to target table."""
 
     errmsg: Optional[str] = None
     columns: str = ""

@@ -25,7 +25,7 @@ def temp_query(sess: Session,
                database: str,
                query: str,
                timeout: int = 10,) -> str:
-    """Запись запроса во временную таблицу. Возвращает название временной таблицы."""
+    """Writing the query to a temporary table. Returns the name of the temporary table."""
 
     _query: str = formatter(query)
 

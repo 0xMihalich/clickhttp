@@ -10,6 +10,6 @@ def _msg(msg: Any) -> str:
 
 
 def to_log(msg: Any) -> None:
-    """Лог с форматированием."""
+    """Formatted log."""
 
     info(_msg(msg))

@@ -10,7 +10,7 @@ except ImportError:
     from backports.zoneinfo import ZoneInfo  # type: ignore
 
 
-# Для возможного использования в будущем
+# For potential future use.
 CLICKHOUSE_DTYPES: Dict[str, type] = {
     "AggregateFunction": str,
     "Array": list,
@@ -147,7 +147,7 @@ CLICKHOUSE_DTYPES: Dict[str, type] = {
 
 
 def dt_detect(dtype: str) -> Union[date, datetime, ZoneInfo]:
-    """Определить тип данных, относящийся к datetime."""
+    """Determine the data type related to datetime."""
 
     if dtype.startswith("Nullable"):
         return dt_detect(search(r"Nullable\((.*?)\)", dtype).group(1))

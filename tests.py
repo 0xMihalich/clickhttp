@@ -7,7 +7,7 @@ from clickhttp.sql_formatter import formatter
 
 
 def test_connobj():
-    """Проверка что объект connection является NamedTuple."""
+    """Check that the connection object is a NamedTuple."""
 
     conn = UserConn('user', 'password', 'localhost', 8123, 'default',)
 
@@ -15,7 +15,7 @@ def test_connobj():
 
 
 def test_formatter():
-    """Проверка работы форматтера."""
+    """Check SQL-format operation."""
 
     assert formatter(
             "-- test query\n"
@@ -26,13 +26,13 @@ def test_formatter():
 
 
 def test_log():
-    """Проверка что лог ничего не возвращает."""
+    """Check logging function is NonReturn."""
 
     assert to_log("hello world") is None
 
 
 def test_session():
-    """Проверка работы объекта сессии."""
+    """Check ClickHttpSession initialization and read_frame method."""
 
     conn = UserConn('play', None, 'play.clickhouse.com', 443, None)
     sess = ClickHttpSession(connection=conn, is_compressed=False, frame_type=FrameType.python,)
